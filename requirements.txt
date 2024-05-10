@@ -1,0 +1,6 @@
+piexif
+Pillow
+argparse
+gpxpy
+pytz
+timezonefinder

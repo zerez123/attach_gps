@@ -11,6 +11,26 @@ gpx_point_list = []
 
 
 class GpxUtils:
+    def __interpolate_coordinates(self, time_taken, gps_point_before, gps_point_after):
+        # Extract coordinates and timestamps from the GPS points
+        lat_before, lon_before, time_before = gps_point_before
+        lat_after, lon_after, time_after = gps_point_after
+        if time_before < time_taken < time_after:
+            # Calculate the time difference between before and after points
+            time_diff = (time_after - time_before).total_seconds()
+
+            # Calculate the time difference between time taken and time before
+            time_diff_taken_before = (time_taken - time_before).total_seconds()
+
+            # Calculate the proportion of time that has passed between before and after points
+            proportion = time_diff_taken_before / time_diff
+
+            # Interpolate latitude and longitude
+            lon_interpolated = lon_before + proportion * (lon_after - lon_before)
+            lat_interpolated = lat_before + proportion * (lat_after - lat_before)
+
+            return lat_interpolated, lon_interpolated, time_taken
+
 
     def __utc_to_local(self, utc_time, lat, lon):
         if use_local_time:
@@ -42,6 +62,8 @@ class GpxUtils:
                     gpx_point_list.append(current_point)
 
     def gpx_get_godata_by_date(self, date_time):
+        item_before = gpx_point_list[0]
         for item in gpx_point_list:
             if date_time < item[2]:
-                return item
+                return self.__interpolate_coordinates(date_time, item_before, item)
+            item_before = item

@@ -9,12 +9,6 @@ import argparse
 from ExifUtils import ExifUtils
 from GpxUtils import GpxUtils
 
-# path = "/home/erez/Pictures"
-# fname = "IMG_3724.JPG"
-
-# path = "/home/erez/Downloads"
-fname = "20240316_123404.jpg"
-
 exifu = ExifUtils()
 gpxu = GpxUtils()
 

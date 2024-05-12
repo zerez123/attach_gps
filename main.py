@@ -1,8 +1,6 @@
 import os
-import sys
 from pathlib import Path
 import datetime
-#from datetime import datetime
 import piexif
 from PIL import Image
 import argparse
@@ -106,15 +104,13 @@ def main():
     # Run over the GPX file in the folder
     for fname in jpg_files_list:
         # Open the image file
-        print(fname)
         img = Image.open(fname)
         exif_dict = piexif.load(img.info['exif'])
         # And read the creation date time
         creation_date = convert_to_datetime(exifu.get_exif_datetime(exif_dict))
         creation_date = creation_date + datetime.timedelta(seconds=cameradif)
         gps_point = gpxu.gpx_get_godata_by_date(creation_date)
-        print(creation_date)
-        print(gps_point)
+        print("File: ", fname, "Creation date: ", creation_date.strftime("%Y-%m-%d %H:%M:%S"), "Location: ", gps_point)
         if gps_point:
             # And save the modified image with new file name
             exif_dict1 = exifu.set_exif_geoloc(exif_dict, gps_point[0], gps_point[1], 0)

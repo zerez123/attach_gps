@@ -37,7 +37,7 @@ class GpxUtils:
             for segment in track.segments:
                 for point in segment.points:
                     current_time = self.__utc_to_local(point.time, point.latitude, point.longitude)
-                    current_time = current_time.replace(tzinfo=None) + timedelta(hours=timedif)
+                    current_time = current_time.replace(tzinfo=None) + timedelta(seconds=timedif)
                     current_point = (point.latitude, point.longitude, current_time)
                     gpx_point_list.append(current_point)
 

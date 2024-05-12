@@ -35,3 +35,9 @@ class ExifUtils:
         # 1:'N' 2:((31,1),(23,1),(23071559,1000000)) -> N31 23 23.071559
         # 3:'E' 4:((34,1),(27,1),(28693800,1000000)) -> E34 27 28.6938
         return exif_data
+
+    def set_exif_datetime(self, exif_dict, new_creation_date):
+        date_string = new_creation_date.strftime("%Y-%m-%d %H:%M:%S")
+        # Modify the creation date in the EXIF data
+        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = date_string.encode("utf-8")
+        return exif_dict

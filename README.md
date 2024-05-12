@@ -39,7 +39,8 @@ Before running the program, ensure you have recorded the GPS path where the pict
 
    - `/path/to/images`: Path to the directory containing the JPG images.
    - `/path/to/gps/recordings.gpx`: Path to the GPX file containing the GPS recordings.
-   - `--local-offset <offset_in_hours>` (optional): If the camera's clock is set to local time, provide the time difference between the local time and UTC in hours.
+   - `--timediff <offset_in_hh:mm:ss>` (optional): If the camera's clock is set to local time, provide the time difference between the local time and UTC in hours.
+   - `--cameradiff <offset_in_hh:mm:ss>` (optional): Time difference between the camera and the local time.
 
 ### Step 3: Check Results
 

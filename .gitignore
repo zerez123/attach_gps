@@ -1,0 +1,7 @@
+# Ignore PyCharm files
+.idea/
+*.iml
+__pycache__/
+# Ignore image files
+*.jpg
+pics/

@@ -113,10 +113,12 @@ def main():
         print("File: ", fname, "Creation date: ", creation_date.strftime("%Y-%m-%d %H:%M:%S"), "Location: ", gps_point)
         if gps_point:
             # And save the modified image with new file name
-            exif_dict1 = exifu.set_exif_geoloc(exif_dict, gps_point[0], gps_point[1], 0)
+            exif_dict = exifu.set_exif_geoloc(exif_dict, gps_point[0], gps_point[1], 0)
             if cameradif != 0:
-                exifu.set_exif_datetime(exif_dict1, creation_date)
-            exif_bytes = piexif.dump(exif_dict1)
+                datetime_str = creation_date.strftime("%Y:%m:%d %H:%M:%S")
+                datetime_bytes = byte_data = datetime_str.encode('utf-8')
+                exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = datetime_bytes
+            exif_bytes = piexif.dump(exif_dict)
             img.save('_%s' % fname, "jpeg", exif=exif_bytes)
     # Finally restore the original folder and exit
     os.chdir(original_path)

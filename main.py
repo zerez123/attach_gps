@@ -81,6 +81,7 @@ def main():
                         help='Time difference between the image time(local) and the gps time (utc) format hh:mm:ss')
     parser.add_argument('--cameradiff', type=parse_time_offset,
                         help='Time difference between the camera and the local time format hh:mm:ss')
+    parser.add_argument('--olalt', type=int, help='if 1 Use on line altitude')
 
     # Parse the command-line arguments
     args = parser.parse_args()
@@ -88,6 +89,7 @@ def main():
     gpx_file = args.gpx
     timedif = args.timediff if args.timediff is not None else 0
     cameradif = args.cameradiff if args.cameradiff is not None else 0
+    using_online_alt = args.olalt if args.olalt is not None else 0
 
     # Get the list of the files in a folder
     folder_path = Path(path)
@@ -109,11 +111,11 @@ def main():
         # And read the creation date time
         creation_date = convert_to_datetime(exifu.get_exif_datetime(exif_dict))
         creation_date = creation_date + datetime.timedelta(seconds=cameradif)
-        gps_point = gpxu.gpx_get_godata_by_date(creation_date)
+        gps_point = gpxu.gpx_get_godata_by_date(creation_date, using_online_alt)
         print("File: ", fname, "Creation date: ", creation_date.strftime("%Y-%m-%d %H:%M:%S"), "Location: ", gps_point)
         if gps_point:
             # And save the modified image with new file name
-            exif_dict = exifu.set_exif_geoloc(exif_dict, gps_point[0], gps_point[1], 0)
+            exif_dict = exifu.set_exif_geoloc(exif_dict, gps_point[0], gps_point[1], gps_point[2])
             if cameradif != 0:
                 datetime_str = creation_date.strftime("%Y:%m:%d %H:%M:%S")
                 datetime_bytes = byte_data = datetime_str.encode('utf-8')

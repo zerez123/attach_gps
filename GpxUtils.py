@@ -11,6 +11,7 @@ gpx_point_list = []
 
 import requests
 
+
 class GpxUtils:
     def __get_elevation(self, lat, lon):
         url = "https://api.open-elevation.com/api/v1/lookup"
@@ -32,10 +33,9 @@ class GpxUtils:
             return None
 
     def __interpolate_coordinates(self, time_taken, gps_point_before, gps_point_after, using_online_alt):
-        alt_interpolated = 0
         # Extract coordinates and timestamps from the GPS points
-        lat_before, lon_before, time_before = gps_point_before
-        lat_after, lon_after, time_after = gps_point_after
+        lat_before, lon_before, alt_before, time_before = gps_point_before
+        lat_after, lon_after, alt_after, time_after = gps_point_after
 
         if time_before < time_taken < time_after:
             # Calculate the time difference between before and after points
@@ -50,13 +50,14 @@ class GpxUtils:
             # Interpolate latitude and longitude
             lon_interpolated = lon_before + proportion * (lon_after - lon_before)
             lat_interpolated = lat_before + proportion * (lat_after - lat_before)
+            alt_interpolated = alt_before + proportion * (alt_after - alt_before)
             if using_online_alt > 0:
                 elevation = self.__get_elevation(lat_interpolated, lon_interpolated)
                 if elevation is not None:
+                    # print('%.2f %.2f' % (elevation, alt_interpolated))
                     alt_interpolated = elevation
 
             return lat_interpolated, lon_interpolated, alt_interpolated, time_taken
-
 
     def __utc_to_local(self, utc_time, lat, lon):
         if use_local_time:
@@ -77,6 +78,7 @@ class GpxUtils:
         return local_time
 
     def gpx_read_route(self, gpx_filename, timedif):
+        elevation = 0
         gpx_file = open(gpx_filename, 'r')
         gpx = gpxpy.parse(gpx_file)
         for track in gpx.tracks:
@@ -84,12 +86,14 @@ class GpxUtils:
                 for point in segment.points:
                     current_time = self.__utc_to_local(point.time, point.latitude, point.longitude)
                     current_time = current_time.replace(tzinfo=None) + timedelta(seconds=timedif)
-                    current_point = (point.latitude, point.longitude, current_time)
+                    if point.elevation is not None:
+                        elevation = point.elevation
+                    current_point = (point.latitude, point.longitude, elevation, current_time)
                     gpx_point_list.append(current_point)
 
     def gpx_get_godata_by_date(self, date_time, using_online_alt):
         item_before = gpx_point_list[0]
         for item in gpx_point_list:
-            if date_time < item[2]:
+            if date_time < item[3]:
                 return self.__interpolate_coordinates(date_time, item_before, item, using_online_alt)
             item_before = item

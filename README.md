@@ -41,7 +41,7 @@ Before running the program, ensure you have recorded the GPS path where the pict
    - `/path/to/gps/recordings.gpx`: Path to the GPX file containing the GPS recordings.
    - `--timediff <offset_in_hh:mm:ss>` (optional): If the camera's clock is set to local time, provide the time difference between the local time and UTC in hours.
    - `--cameradiff <offset_in_hh:mm:ss>` (optional): Time difference between the camera and the local time.
-   - '--olalt <0:1>' (optional): Use on line altitude service to get the altitude of the location, need to be online
+   - `--olalt <0:1>` (optional): Use online altitude service to get the altitude of the location, need to be online
 
 ### Step 3: Check Results
 

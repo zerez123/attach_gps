@@ -29,7 +29,8 @@ class ExifUtils:
         exif_data['GPS'][piexif.GPSIFD.GPSLatitudeRef] = lat_ref
         exif_data['GPS'][piexif.GPSIFD.GPSLongitude] = self.__decimal_to_dms(abs(lon))
         exif_data['GPS'][piexif.GPSIFD.GPSLongitudeRef] = lon_ref
-        exif_data['GPS'][piexif.GPSIFD.GPSAltitude] = int(abs(alt)),alt_ref
+        exif_data['GPS'][piexif.GPSIFD.GPSAltitudeRef] = lat_ref
+        exif_data['GPS'][piexif.GPSIFD.GPSAltitude] = int(abs(alt)),1
         exif_data['GPS'][piexif.GPSIFD.GPSVersionID] = (2, 2, 0, 0)
 
         # The GPS lat and lon stored in hr min sec format:

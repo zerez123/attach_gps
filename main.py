@@ -103,7 +103,7 @@ def main():
     # Read the GPX file
     gpxu.gpx_read_route(gpx_file, timedif)
 
-    # Run over the GPX file in the folder
+    # Run over the JPG file in the folder
     for fname in jpg_files_list:
         # Open the image file
         img = Image.open(fname)

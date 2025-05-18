@@ -20,6 +20,7 @@ class ExifUtils:
     def set_exif_geoloc(self, exif_data, lat, lon, alt):
         lat_ref = b'N' if lat >= 0 else b'S'
         lon_ref = b'E' if lon >= 0 else b'W'
+        alt_ref = 1 if alt < 0 else 0
         version = (2, 2, 0, 0)
 
         # Construct GPS data dictionary
@@ -28,7 +29,8 @@ class ExifUtils:
         exif_data['GPS'][piexif.GPSIFD.GPSLatitudeRef] = lat_ref
         exif_data['GPS'][piexif.GPSIFD.GPSLongitude] = self.__decimal_to_dms(abs(lon))
         exif_data['GPS'][piexif.GPSIFD.GPSLongitudeRef] = lon_ref
-        exif_data['GPS'][piexif.GPSIFD.GPSAltitude] = int(alt),1
+        exif_data['GPS'][piexif.GPSIFD.GPSAltitudeRef] = lat_ref
+        exif_data['GPS'][piexif.GPSIFD.GPSAltitude] = int(abs(alt)),1
         exif_data['GPS'][piexif.GPSIFD.GPSVersionID] = (2, 2, 0, 0)
 
         # The GPS lat and lon stored in hr min sec format:
